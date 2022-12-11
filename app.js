@@ -50,26 +50,26 @@ parser.on('data', function(data) {
     test= parseFloat(data.split(" ")[1]);
     test2= data.split(" ")[0];
     
-    /*if(typeof(test)!== undefined){
+    if(typeof(test)!== undefined){
 		insertData(con, test);
-	}*/
+	}
     
 });
 
-/*function insertData(con, test){
+function insertData(con, test){
 	if(typeof(test2) == "string"){
 
 		  if(test2.includes("Humedad:")){	
-		   var sql = `INSERT INTO humedad VALUES (${test}, '${new Date().toLocaleString().replace(",","")}')`;
+		   var sql = `INSERT INTO humedad VALUES (${test}, NOW())`;
 		  }
 		  else if(test2.includes("Caudal:")){
-			 var sql = `INSERT INTO flujo VALUES (${test}, '${new Date().toLocaleString().replace(",","")}')`;
+			 var sql = `INSERT INTO flujo VALUES (${test}, NOW())`;
 		  }
 		  else if(test2.includes("Temperatura:")){	
-			 var sql = `INSERT INTO temperatura VALUES (${test}, '${new Date().toLocaleString().replace(",","")}')`;
+			 var sql = `INSERT INTO temperatura VALUES (${test}, NOW())`;
 		  }
 		  else if(test2.includes("HX711:")){		  
-			 var sql = `INSERT INTO comida VALUES (${test}, '${new Date().toLocaleString().replace(",","")}')`;
+			 var sql = `INSERT INTO comida VALUES (${test}, NOW())`;
 		  }
 		  else {
 			  var sql = "";
@@ -82,6 +82,5 @@ parser.on('data', function(data) {
 		});
 	}
 }
-	*/
 app.listen(4000);
 

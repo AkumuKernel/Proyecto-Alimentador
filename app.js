@@ -61,21 +61,22 @@ parser.on('data', function(data) {
 	}
     
 });
-var sql = ""
+var sql = "";
+var token = "'ffe1106377025958c5f2c9fa5125a94f'";
 function insertData(con, test){
 	if(typeof(test2) == "string"){
 
 		  if(test2.includes("Humedad:")){	
-			sql = `INSERT INTO humedad VALUES ('ffe1106377025958c5f2c9fa5125a94f', ${test}, NOW())`;
+			sql = `INSERT INTO humedad VALUES (${token}, ${test}, NOW())`;
 		  }
 		  else if(test2.includes("Caudal:")){
-			 sql = `INSERT INTO flujo VALUES ('ffe1106377025958c5f2c9fa5125a94f', ${test}, NOW())`;
+			 sql = `INSERT INTO flujo VALUES (${token}, ${test}, NOW())`;
 		  }
 		  else if(test2.includes("Temperatura:")){	
-			 sql = `INSERT INTO temperatura VALUES ('ffe1106377025958c5f2c9fa5125a94f', ${test}, NOW())`;
+			 sql = `INSERT INTO temperatura VALUES (${token}, ${test}, NOW())`;
 		  }
 		  else if(test2.includes("HX711:")){		  
-			 sql = `INSERT INTO comida VALUES ('ffe1106377025958c5f2c9fa5125a94f', ${test}, NOW())`;
+			 sql = `INSERT INTO comida VALUES (${token}, ${test}, NOW())`;
 		  }
 		  else {
 			  sql = "";

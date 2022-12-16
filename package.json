@@ -6,6 +6,7 @@
         "express": "^4.15.2",
         "mysql": "^2.18.1",
         "serialport": "^9.2.8",
-        "socket.io": "^2.5.0"
+        "socket.io": "^2.5.0",
+        "xhr2": "^0.2.1"
     }
 }

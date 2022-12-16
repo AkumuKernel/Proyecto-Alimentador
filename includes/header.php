@@ -24,7 +24,7 @@
 		  <a href="dashboard.php">Monitor</a>
 		  <a href="edit.php">Datos Mascota</a>
           <a href="logout.php">Cerrar Sesion</a>
-        <a href="#"><?php echo $_SESSION["username"]["name"] ?></a>
+        <a href="#"><?php echo $user_check ?></a>
       <?php }else{ ?>
         <a href="login.php">Logeate</a>
         <a href="register.php">Registrate</a>

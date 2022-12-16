@@ -1,6 +1,7 @@
 var http = require('http');
 var fs = require('fs');
 var mysql = require('mysql');
+var XMLHttpRequest = require('xhr2');
 var index = fs.readFileSync( 'index.html');
 
 var con = mysql.createConnection({
@@ -17,7 +18,7 @@ const parser = new parsers.Readline({
     delimiter: '\r\n'
 });
 
-var port = new SerialPort('/dev/ttyACM0',{ 
+var port = new SerialPort('/dev/ttyUSB0',{ 
     baudRate: 9600,
     dataBits: 8,
     parity: 'none',
@@ -45,40 +46,45 @@ parser.on('data', function(data) {
     
     console.log(data);
     
-    io.emit('data', data);
+	// io.emit('data', data);
     
-    test= parseFloat(data.split(" ")[1]);
-    test2= data.split(" ")[0];
-    
-    if(typeof(test)!== undefined){
+    if(data.split(" ")[1] == "nan"){
+		test = -1;
+	}
+	else{
+		test= parseFloat(data.split(" ")[1]);
+		test2= data.split(" ")[0];
+	}
+	
+    if(typeof(test)!= undefined && test != NaN){
 		insertData(con, test);
 	}
     
 });
-
+var sql = ""
 function insertData(con, test){
 	if(typeof(test2) == "string"){
 
 		  if(test2.includes("Humedad:")){	
-		   var sql = `INSERT INTO humedad VALUES (${test}, NOW())`;
+			sql = `INSERT INTO humedad VALUES ('ffe1106377025958c5f2c9fa5125a94f', ${test}, NOW())`;
 		  }
 		  else if(test2.includes("Caudal:")){
-			 var sql = `INSERT INTO flujo VALUES (${test}, NOW())`;
+			 sql = `INSERT INTO flujo VALUES ('ffe1106377025958c5f2c9fa5125a94f', ${test}, NOW())`;
 		  }
 		  else if(test2.includes("Temperatura:")){	
-			 var sql = `INSERT INTO temperatura VALUES (${test}, NOW())`;
+			 sql = `INSERT INTO temperatura VALUES ('ffe1106377025958c5f2c9fa5125a94f', ${test}, NOW())`;
 		  }
 		  else if(test2.includes("HX711:")){		  
-			 var sql = `INSERT INTO comida VALUES (${test}, NOW())`;
+			 sql = `INSERT INTO comida VALUES ('ffe1106377025958c5f2c9fa5125a94f', ${test}, NOW())`;
 		  }
 		  else {
-			  var sql = "";
+			  sql = "";
 		  }
 	  }
 	 if(sql!=""){ 
 		con.query(sql, function (err, result) {
 		 if (err) throw err;
-			console.log(result);
+			console.log(err);
 		});
 	}
 }

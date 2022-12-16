@@ -1,5 +1,7 @@
 <?php
 require 'vendor/autoload.php';
+require 'includes/header.php';
+
 
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;

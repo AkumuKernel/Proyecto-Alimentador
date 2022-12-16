@@ -17,7 +17,7 @@ html{
 
 body{
   font-size: 16px; /* 1rem = 10px*/
-  font-family: 'Krub', sans-serif;
+  font-family: 'Krub', sans-serif!important;
   background-image: linear-gradient(to top, #DFE9F3 0%, #DFE9F3 100%);
 }
 .container{
@@ -282,6 +282,24 @@ h1,h2,h3{
 	background-color: red;
 	padding: 2rem;
 	color: var(--white);
+}
+
+/* Tables */
+
+.table{
+	margin: 5rem auto 0 auto;
+	font-size: 2rem;
+	text-align: center;
+	border: none;
+}
+
+.table th{
+		
+	color: var(--purple);
+
+}
+.table td{
+	padding: 1rem;
 }
 
 /* Footer */

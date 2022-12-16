@@ -4,7 +4,6 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
     <link rel="stylesheet" href="assets/styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Krub:wght@400;700&display=swap" rel="stylesheet">
   
 <div class="chart"></div>
 
@@ -98,32 +97,26 @@
 			$comida = array();
 			$flujo = array();
 			$temp = array();
-			$humedad = array();
-			
-			$query = mysqli_query($db,"SELECT AVG(peso) as peso, date_format(fecha, '%Y-%m-%d %H') AS fecha FROM comida GROUP BY date_format(fecha, '%Y-%m%-d% H')");
+
+			$query = mysqli_query($db,"SELECT AVG(peso) as peso, date_format(fecha, '%Y-%m-%d') AS fecha FROM comida WHERE token = '".$_SESSION["username"]["token"]."' AND fecha > NOW() - INTERVAL 30 DAY AND fecha < NOW() + INTERVAL 1 DAY GROUP BY date_format(fecha, '%Y-%m%-d%')");
 			while($row = mysqli_fetch_assoc($query)){
 				$comida[] = $row;
 			}
-			$query = mysqli_query($db,"SELECT COUNT(*) as flujo, date_format(fecha, '%Y-%m-%d %H') AS fecha FROM flujo GROUP BY date_format(fecha, '%Y-%m%-d% H')");
+			$query = mysqli_query($db,"SELECT COUNT(*) as flujo, date_format(fecha, '%Y-%m-%d') AS fecha FROM flujo WHERE token = '".$_SESSION["username"]["token"]."' AND fecha > NOW() - INTERVAL 30 DAY AND fecha < NOW() + INTERVAL 1 DAY GROUP BY date_format(fecha, '%Y-%m%-d%')");
 			
 			while($row = mysqli_fetch_assoc($query)){
 				$flujo[] = $row;
 			}
-			$query = mysqli_query($db,"SELECT AVG(temp) AS temp, date_format(fecha, '%Y-%m-%d %H') AS fecha FROM temperatura GROUP BY date_format(fecha, '%Y-%m%-d% H')");
+			$query = mysqli_query($db,"SELECT AVG(temp) AS temp, date_format(fecha, '%Y-%m-%d') AS fecha FROM temperatura WHERE token = '".$_SESSION["username"]["token"]."' AND fecha > NOW() - INTERVAL 30 DAY AND fecha < NOW() + INTERVAL 1 DAY GROUP BY date_format(fecha, '%Y-%m%-d%')");
 			
 			while($row = mysqli_fetch_assoc($query)){
 				$temp[] = $row;
-			}
-			$query = mysqli_query($db,"SELECT AVG(humedad) as humedad, date_format(fecha, '%Y-%m-%d %H') AS fecha FROM humedad GROUP BY date_format(fecha, '%Y-%m%-d% H')");
-			
-			while($row = mysqli_fetch_assoc($query)){
-				$humedad[] = $row;
-			}
-
+			}						
+	
 		?>
-		/*var sparklineData1 = <? echo json_encode($comida) ?>;
-		var sparklineData2 = <? echo json_encode($flujo) ?>;
-		var sparklineData3 = <? echo json_encode($temp) ?>;*/
+		//var sparklineData1 = <?php echo json_encode($comida) ?>;
+		//var sparklineData2 = <?php echo json_encode($flujo) ?>;
+		//var sparklineData3 = <?php echo json_encode($temp) ?>;
 		var sparklineData = [47, 45, 54, 38, 56, 24, 65, 31, 37, 39, 62, 51, 35, 41, 35, 27, 93, 53, 61, 27, 54, 43, 19, 46];
 
 		// the default colorPalette for this dashboard
@@ -148,10 +141,10 @@
 		  },
 		  series: [{
 			name: 'Alimentación',
-			/*data: sparklineData1[peso]*/
+			//data: sparklineData1["peso"]
 			data: randomizeArray(sparklineData)
 		  }],
-		  /*labels: data: sparklineData1[fecha],*/
+		  //labels: sparklineData1["fecha"],
 		  labels: [...Array(24).keys()].map(n => `2018-09-0${n+1}`),
 		  yaxis: {
 			min: 0
@@ -196,10 +189,10 @@
 		  },
 		  series: [{
 			name: 'Hidratación',
-			/*data: sparklineData2[flujo]*/
+			//data: sparklineData2["flujo"]
 			data: randomizeArray(sparklineData)
 		  }],
-		  /*labels: data: sparklineData2[fecha],*/
+		  //labels: sparklineData2["fecha"],
 		  labels: [...Array(24).keys()].map(n => `2018-09-0${n+1}`),
 		  yaxis: {
 			min: 0
@@ -243,11 +236,11 @@
 			opacity: 1,
 		  },
 		  series: [{
-			name: 'Profits',
-			/*data: sparklineData3[temp]*/
+			name: 'Temperatura',
+			//data: sparklineData3["temp"]
 			data: randomizeArray(sparklineData)
 		  }],
-		  /*labels: data: sparklineData3[fecha],*/
+		  //labels: sparklineData3["fecha"],
 		  labels: [...Array(24).keys()].map(n => `2018-09-0${n+1}`),
 		  xaxis: {
 			type: 'datetime',
@@ -274,69 +267,10 @@
 			}
 		  }
 		}
-
-		var monthlyEarningsOpt = {
-		  chart: {
-			type: 'area',
-			height: 260,
-			background: '#eff4f7',
-			sparkline: {
-			  enabled: true
-			},
-			offsetY: 20
-		  },
-		  stroke: {
-			curve: 'straight'
-		  },
-		  fill: {
-			type: 'solid',
-			opacity: 1,
-		  },
-		  series: [{
-			data: randomizeArray(sparklineData)
-		  }],
-		  xaxis: {
-			crosshairs: {
-			  width: 1
-			},
-		  },
-		  yaxis: {
-			min: 0,
-			max: 130
-		  },
-		  colors: ['#dce6ec'],
-
-		  title: {
-			text: 'Total Earned',
-			offsetX: -30,
-			offsetY: 100,
-			align: 'right',
-			style: {
-			  color: '#7c939f',
-			  fontSize: '16px',
-			  cssClass: 'apexcharts-yaxis-title'
-			}
-		  },
-		  subtitle: {
-			text: '$135,965',
-			offsetX: -30,
-			offsetY: 100,
-			align: 'right',
-			style: {
-			  color: '#7c939f',
-			  fontSize: '24px',
-			  cssClass: 'apexcharts-yaxis-title'
-			}
-		  }
-		}
-
-
+		
 		new ApexCharts(document.querySelector("#spark1"), spark1).render();
 		new ApexCharts(document.querySelector("#spark2"), spark2).render();
 		new ApexCharts(document.querySelector("#spark3"), spark3).render();
-
-		var monthlyEarningsChart = new ApexCharts(document.querySelector("#monthly-earnings-chart"), monthlyEarningsOpt);
-
 
 		var optionsArea = {
 		  chart: {
@@ -575,25 +509,25 @@
 		   /*
 		  <?php
 		   $series = [];
-		   $query = mysqli_query($db ,"SELECT COUNT(*) AS count FROM comida WHERE date_format(fecha, '%Y-%m-%d') = date_format(NOW(), '%Y-%m-%d')");
+		   $query = mysqli_query($db ,"SELECT COUNT(*) AS count FROM comida WHERE date_format(fecha, '%Y-%m-%d') = date_format(NOW(), '%Y-%m-%d') AND token = '".$_SESSION["username"]["token"]."'");
 		   
 		   while($row = mysqli_fetch_assoc($query)){
 				$series[0] = $row['count'];
 			}
 		   
-		   $query = mysqli_query($db ,"SELECT COUNT(*) AS count FROM flujo WHERE date_format(fecha, '%Y-%m-%d') = date_format(NOW(), '%Y-%m-%d')");
+		   $query = mysqli_query($db ,"SELECT COUNT(*) AS count FROM flujo WHERE date_format(fecha, '%Y-%m-%d') = date_format(NOW(), '%Y-%m-%d') AND token = '".$_SESSION["username"]["token"]."'");
 		   
 		   while($row = mysqli_fetch_assoc($query)){
 				$series[1] = $row['count'];
 			}
 			
-		   $query = mysqli_query($db ,"SELECT COUNT(*) AS count FROM temperatura WHERE date_format(fecha, '%Y-%m-%d') = date_format(NOW(), '%Y-%m-%d')");
+		   $query = mysqli_query($db ,"SELECT COUNT(*) AS count FROM temperatura WHERE date_format(fecha, '%Y-%m-%d') = date_format(NOW(), '%Y-%m-%d') AND token = '".$_SESSION["username"]["token"]."'");
 		   
 		   while($row = mysqli_fetch_assoc($query)){
 				$series[2] = $row['count'];
 			}
 			
-		   $query = mysqli_query($db ,"SELECT COUNT(*) AS count FROM humedad WHERE date_format(fecha, '%Y-%m-%d') = date_format(NOW(), '%Y-%m-%d')");
+		   $query = mysqli_query($db ,"SELECT COUNT(*) AS count FROM humedad WHERE date_format(fecha, '%Y-%m-%d') = date_format(NOW(), '%Y-%m-%d') AND token = '".$_SESSION["username"]["token"]."'");
 		   
 		   while($row = mysqli_fetch_assoc($query)){
 				$series[3] = $row['count'];
@@ -647,7 +581,7 @@
 			  name: "Alimentación",
 			  /* 
 			  <?php
-			  $query = mysqli_query($db,"SELECT peso FROM comida");
+			  $query = mysqli_query($db,"SELECT peso FROM comida WHERE token = '".$_SESSION["username"]["token"]."' AND fecha > NOW() - INTERVAL 1 DAY AND fecha < NOW()");
 			  $alimentacion = [];
 			  
 			  while($row = mysqli_fetch_assoc($query)){
@@ -663,7 +597,7 @@
 			  name: "Hidratación",
 			  
 			  /*<?php
-			  $query = mysqli_query($db,"SELECT flujo FROM flujo");
+			  $query = mysqli_query($db,"SELECT flujo FROM flujo WHERE token = '".$_SESSION["username"]["token"]."' AND fecha > NOW() - INTERVAL 1 DAY AND fecha < NOW()");
 			  $hidratacion = [];
 			  
 			  while($row = mysqli_fetch_assoc($query)){
